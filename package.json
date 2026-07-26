@@ -1,6 +1,9 @@
 {
-  "name": "todo-app",
+  "name": "turbo-repo-is-cool",
   "private": true,
+  "author": {
+    "name": "Prime Okanlawon"
+  },
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
