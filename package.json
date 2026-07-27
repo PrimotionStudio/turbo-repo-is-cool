@@ -12,9 +12,9 @@
     "check-types": "turbo run check-types"
   },
   "devDependencies": {
-    "prettier": "^3.7.4",
+    "prettier": "^3.9.6",
     "turbo": "^2.10.7",
-    "typescript": "5.9.2"
+    "typescript": "7.0.2"
   },
   "engines": {
     "node": ">=18"
@@ -28,5 +28,11 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "@repo/auth": "workspace:*",
+    "@repo/db": "workspace:*",
+    "@repo/schemas": "workspace:*",
+    "@repo/shared-components": "workspace:*"
+  }
 }
