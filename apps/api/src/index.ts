@@ -35,10 +35,10 @@ app.use(
   }),
 );
 
-app.get("/", (c) => c.text("Hello RSU!"));
+app.get("/", (c) => c.text("Hello Todo!"));
 app.get("/server-time", (c) => c.json({ now: Date.now() }));
 
-app.on(["POST", "GET"], "/api/auth/*", (c) => auth.handler(c.req.raw));
+app.on(["POST", "GET"], "/auth/*", (c) => auth.handler(c.req.raw));
 
 serve(
   {

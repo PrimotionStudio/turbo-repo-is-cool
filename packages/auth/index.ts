@@ -3,6 +3,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "@repo/db";
 
 export const auth = betterAuth({
+  basePath: "/api/v1/auth",
   secret: process.env.BETTER_AUTH_SECRET as string,
   baseURL: process.env.BETTER_AUTH_URL as string,
   database: prismaAdapter(prisma, {
@@ -11,6 +12,10 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  logger: {
+    level: "debug",
+  },
+  appName: "Todo App",
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
