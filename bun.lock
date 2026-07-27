@@ -11,9 +11,9 @@
         "@repo/shared-components": "workspace:*",
       },
       "devDependencies": {
-        "prettier": "latest",
-        "turbo": "latest",
-        "typescript": "latest",
+        "prettier": "^3.9.6",
+        "turbo": "^2.10.7",
+        "typescript": "7.0.2",
       },
     },
     "apps/admin": {
@@ -22,6 +22,7 @@
       "dependencies": {
         "@repo/schemas": "workspace:*",
         "better-auth": "^1.6.25",
+        "lucide-react": "^1.27.0",
         "next": "16.2.12",
         "react": "19.2.4",
         "react-dom": "19.2.4",
@@ -61,6 +62,7 @@
         "@repo/schemas": "workspace:*",
         "@repo/shared-components": "workspace:*",
         "better-auth": "^1.6.25",
+        "lucide-react": "^1.27.0",
         "next": "16.2.12",
         "react": "19.2.4",
         "react-dom": "19.2.4",
@@ -141,6 +143,7 @@
       "version": "0.1.0",
       "dependencies": {
         "@base-ui/react": "^1.6.0",
+        "@repo/shared-components": "workspace:*",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "lucide-react": "^1.27.0",

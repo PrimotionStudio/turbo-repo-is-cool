@@ -22,6 +22,37 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     },
   },
+  user: {
+    additionalFields: {
+      role: {
+        type: "string",
+        defaultValue: "USER",
+        input: false,
+      },
+    },
+  },
+  emailVerification: {
+    autoSignInAfterVerification: true,
+    expiresIn: 3600,
+    afterEmailVerification: (
+      user: {
+        id: string;
+        createdAt: Date;
+        updatedAt: Date;
+        email: string;
+        emailVerified: boolean;
+        name: string;
+        image?: string | null | undefined;
+      },
+      request?: Request | undefined,
+    ) => Promise.resolve(),
+    sendOnSignIn: true,
+    sendOnSignUp: true,
+  },
+  rateLimit: {
+    window: 1000,
+    max: 100,
+  },
   trustedOrigins: [
     process.env.WEB_URL as string,
     process.env.ADMIN_URL as string,

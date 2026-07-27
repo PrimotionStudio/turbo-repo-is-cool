@@ -3,14 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "exports": {
-    "./globals.css": "./src/app/globals.css",
+    "./globals.css": "./src/styles/globals.css",
     "./components/*": "./src/components/*.tsx",
-    "./lib/*": "./src/lib/*.tsx",
+    "./lib/*": "./src/lib/*.ts",
     "./hooks/*": "./src/hooks/*.tsx",
-    "./*": "./src/*.tsx"
+    "./*": [
+      "./src/*.tsx",
+      "./src/*.ts"
+    ]
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
+    "@repo/shared-components": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.27.0",
