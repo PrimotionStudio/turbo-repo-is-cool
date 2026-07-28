@@ -8,12 +8,14 @@ import {
   FieldGroup,
   FieldLabel,
   FieldSeparator,
-} from "@repo/shared-components/components/ui/field";
-import { Input } from "@repo/shared-components/components/ui/input";
+} from "../components/ui/field";
+import { Input } from "../components/ui/input";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { UserCreateSchema, UserCreateType } from "@repo/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { toast } from "react-hot-toast";
+import { authClient } from "../lib/auth";
 
 export function SignupForm({
   className,
@@ -22,6 +24,7 @@ export function SignupForm({
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<Pick<UserCreateType, "email">>({
     resolver: zodResolver(UserCreateSchema.pick({ email: true })),
@@ -30,8 +33,16 @@ export function SignupForm({
   const onSubmit: SubmitHandler<Pick<UserCreateType, "email">> = async (
     data,
   ) => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log(data);
+    const result = await authClient.signIn.magicLink({
+      email: data.email,
+      callbackURL: "/home",
+      newUserCallbackURL: "/onboarding",
+      errorCallbackURL: "/auth/error",
+    });
+    if (result.error || !result.data?.status)
+      toast.error(
+        result.error?.message || "Failed to signup. Please try again",
+      );
   };
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -75,7 +86,7 @@ export function SignupForm({
             </Button>
           </Field>
           <FieldSeparator>Or</FieldSeparator>
-          <Field className="grid gap-4 sm:grid-cols-2">
+          <Field>
             <Button variant="outline" type="button" disabled={isSubmitting}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <path

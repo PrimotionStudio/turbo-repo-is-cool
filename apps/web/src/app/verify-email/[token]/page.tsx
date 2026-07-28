@@ -1,5 +1,5 @@
 "use client";
-import { authClient } from "@/lib/auth";
+import { authClient } from "@repo/shared-components/lib/auth";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import {

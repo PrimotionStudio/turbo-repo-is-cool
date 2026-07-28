@@ -109,7 +109,7 @@ export const auth = betterAuth({
     // Magic Link plugin for passwordless login.
     magicLink({
       // Allow or disallow account creation via magic link.
-      disableSignUp: false, // false = allow account creation
+      disableSignUp: false, // false = allow account creation if the user does not exist
       // The expiration time for magic link tokens in seconds.
       expiresIn: 60 * 15, // 15 minutes, a tighter expiration than email verification as it's also a login token.
       // Custom function to send the magic link email.
