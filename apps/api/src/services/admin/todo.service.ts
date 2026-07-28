@@ -7,13 +7,6 @@ export const GetTodos = async (c: Context) => {
   return c.json(todos);
 };
 
-export const GetTodoById = async (c: Context) => {
-  const id = c.req.param("id");
-  if (!id) throw new ApiError("Todo id is required", 400);
-  const todo = await prisma.todo.findUnique({ where: { id } });
-  return c.json(todo);
-};
-
 export const DeleteTodo = async (c: Context) => {
   const id = c.req.param("id");
   if (!id) throw new ApiError("Todo id is required", 400);

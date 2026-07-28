@@ -8,7 +8,7 @@ export const GetUsers = async (c: Context) => {
   return c.json(users);
 };
 
-export const ChnageUserPassword = async (c: Context) => {
+export const ChangeUserPassword = async (c: Context) => {
   const id = c.req.param("id");
   if (!id) throw new ApiError("User id is required", 400);
   const data = AccountCreateSchema.pick({ password: true }).parse(
