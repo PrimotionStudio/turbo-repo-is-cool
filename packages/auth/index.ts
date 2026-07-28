@@ -1,16 +1,20 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "@repo/db";
+import { openAPI } from "better-auth/plugins";
+import { sendVerificationEmail } from "@repo/emails";
 
 export const auth = betterAuth({
   basePath: "/api/v1/auth",
   secret: process.env.BETTER_AUTH_SECRET as string,
   baseURL: process.env.BETTER_AUTH_URL as string,
+  plugins: [openAPI()],
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
   emailAndPassword: {
     enabled: true,
+    requireEmailVerification: true,
   },
   logger: {
     level: "debug",
@@ -34,20 +38,10 @@ export const auth = betterAuth({
   emailVerification: {
     autoSignInAfterVerification: true,
     expiresIn: 3600,
-    afterEmailVerification: (
-      user: {
-        id: string;
-        createdAt: Date;
-        updatedAt: Date;
-        email: string;
-        emailVerified: boolean;
-        name: string;
-        image?: string | null | undefined;
-      },
-      request?: Request | undefined,
-    ) => Promise.resolve(),
     sendOnSignIn: true,
     sendOnSignUp: true,
+    sendVerificationEmail: async ({ user, url, token }, request) =>
+      void sendVerificationEmail(user.email, user.name, url),
   },
   rateLimit: {
     window: 1000,

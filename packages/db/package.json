@@ -9,9 +9,13 @@
   "scripts": {
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
-    "db:studio": "prisma studio"
+    "db:deploy": "prisma migrate deploy",
+    "db:studio": "prisma studio",
+    "generate:zod": "bun run scripts/generate-zod-schemas.ts"
   },
   "devDependencies": {
+    "@prisma/generator-helper": "^7.9.1",
+    "@prisma/internals": "^7.9.1",
     "@types/bun": "latest",
     "@types/pg": "^8.20.0",
     "dotenv": "^17.4.2",
