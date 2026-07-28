@@ -6,6 +6,10 @@ import { logger } from "hono/logger";
 import { poweredBy } from "hono/powered-by";
 import { rateLimiter } from "hono-rate-limiter";
 import { trimTrailingSlash } from "hono/trailing-slash";
+import UserRoute from "./routes/user.route.js";
+import TodoRoute from "./routes/todo.route.js";
+import AdminTodoRoute from "./routes/admin/todo.route.js";
+import AdminUserRoute from "./routes/admin/user.route.js";
 
 const app = new Hono({ strict: false }).basePath("/api/v1");
 const isDev = process.env.NODE_ENV !== "production";
@@ -39,6 +43,11 @@ app.get("/", (c) => c.text("Hello Todo!"));
 app.get("/server-time", (c) => c.json({ now: Date.now() }));
 
 app.on(["POST", "GET"], "/auth/*", (c) => auth.handler(c.req.raw));
+
+app.route("/user", UserRoute);
+app.route("/todo", TodoRoute);
+app.route("/admin/todo", AdminTodoRoute);
+app.route("/admin/user", AdminTodoRoute);
 
 serve(
   {
