@@ -182,6 +182,39 @@ export async function sendVerificationEmail(
   }
 }
 
+export async function sendMagicLinkEmail(
+  email: string,
+  verificationLink: string,
+) {
+  const subject = "Verify your email - The Primotion Studio";
+
+  const html = createLayout(
+    "Email Verification",
+    `
+      <p>Welcome to The Primotion Studio. Please verify your email address to continue your admission process.</p>
+      ${sectionCard(`
+        <p>Click the button below or copy the link below to verify your email.</p>
+        <p>This link expires in 24 hours.</p>
+      `)}
+      ${button("Verify Email", verificationLink)}
+      <p style="font-size:13px;">If the button does not work, copy this link:<br/>${verificationLink}</p>
+      ${successNotice("Registration successful! Please check your email to verify your account.")}
+    `,
+  );
+  try {
+    await transporter.sendMail({
+      from: `${process.env.APP_NAME} <${process.env.SMTP_USER}>`,
+      to: email,
+      subject,
+      html,
+    });
+    return { success: true };
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : "Unknown error";
+    return { success: false, error: errorMsg };
+  }
+}
+
 export async function sendTransactionEmail(
   email: string,
   name: string,
