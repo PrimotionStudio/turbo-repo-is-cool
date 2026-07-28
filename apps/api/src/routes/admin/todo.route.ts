@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { requireAuth, requireRole } from "../../middleware/auth.js";
+import { requireAuth, requireRole } from "../../middleware/auth.middleware.js";
 import { DeleteTodo, GetTodos } from "../../services/admin/todo.service.js";
 
 const AdminTodoRoute = new Hono();

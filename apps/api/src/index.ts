@@ -11,7 +11,12 @@ import TodoRoute from "./routes/todo.route.js";
 import AdminTodoRoute from "./routes/admin/todo.route.js";
 import AdminUserRoute from "./routes/admin/user.route.js";
 
-const app = new Hono({ strict: false }).basePath("/api/v1");
+const app = new Hono<{
+  Variables: {
+    user: typeof auth.$Infer.Session.user;
+    session: typeof auth.$Infer.Session.session;
+  };
+}>({ strict: false }).basePath("/api/v1");
 const isDev = process.env.NODE_ENV !== "production";
 
 app.use(poweredBy({ serverName: "The Primotion Studio" }));

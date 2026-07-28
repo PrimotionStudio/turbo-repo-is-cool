@@ -1,14 +1,21 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "@repo/db";
-import { openAPI } from "better-auth/plugins";
+import { openAPI, admin } from "better-auth/plugins";
 import { sendVerificationEmail } from "@repo/emails";
 
 export const auth = betterAuth({
   basePath: "/api/v1/auth",
   secret: process.env.BETTER_AUTH_SECRET as string,
   baseURL: process.env.BETTER_AUTH_URL as string,
-  plugins: [openAPI()],
+  plugins: [
+    openAPI(),
+    admin({
+      defaultRole: "USER",
+      bannedUserMessage:
+        "This account has been suspended. Contact support if you believe this is a mistake.",
+    }),
+  ],
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
@@ -40,8 +47,12 @@ export const auth = betterAuth({
     expiresIn: 3600,
     sendOnSignIn: true,
     sendOnSignUp: true,
-    sendVerificationEmail: async ({ user, url, token }, request) =>
-      void sendVerificationEmail(user.email, user.name, url),
+    sendVerificationEmail: async ({ user, token }, request) =>
+      void sendVerificationEmail(
+        user.email,
+        user.name,
+        `${process.env.WEB_URL}/verify-email/${token}`,
+      ),
   },
   rateLimit: {
     window: 1000,
@@ -51,4 +62,16 @@ export const auth = betterAuth({
     process.env.WEB_URL as string,
     process.env.ADMIN_URL as string,
   ],
+  // to allow multiple subdomains to share cookies
+  advanced: {
+    defaultCookieAttributes: {
+      sameSite: "none",
+      secure: true,
+      partitioned: true,
+    },
+    crossSubDomainCookies: {
+      enabled: true,
+      domains: [process.env.WEB_URL as string, process.env.ADMIN_URL as string],
+    },
+  },
 });
