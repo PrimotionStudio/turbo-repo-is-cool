@@ -11,7 +11,7 @@ import {
 } from "@repo/shared-components/components/ui/field";
 import { Input } from "@repo/shared-components/components/ui/input";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { RegisterSchema, RegisterSchemaType } from "@repo/schemas";
+import { UserCreateSchema, UserCreateType } from "@repo/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 
@@ -23,9 +23,13 @@ export function SignupForm({
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<RegisterSchemaType>({ resolver: zodResolver(RegisterSchema) });
+  } = useForm<Pick<UserCreateType, "email">>({
+    resolver: zodResolver(UserCreateSchema.pick({ email: true })),
+  });
 
-  const onSubmit: SubmitHandler<RegisterSchemaType> = async (data) => {
+  const onSubmit: SubmitHandler<Pick<UserCreateType, "email">> = async (
+    data,
+  ) => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     console.log(data);
   };
