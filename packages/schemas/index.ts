@@ -31,6 +31,7 @@ export const UserBaseSchema = z.object({
   email: z.email().toLowerCase(),
   emailVerified: z.boolean().default(false),
   image: z.url("Must be a valid URL").nullable().optional(),
+  banned: z.boolean().default(false),
   createdAt: dateSchema,
   updatedAt: dateSchema,
   role: RoleSchema.default("USER"),

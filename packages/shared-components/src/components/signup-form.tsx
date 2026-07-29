@@ -16,33 +16,50 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { toast } from "react-hot-toast";
 import { authClient } from "../lib/auth";
+import { useRouter } from "next/navigation";
+import z from "zod";
+
+type RegisterUser = Pick<UserCreateType, "email" | "name"> & {
+  password: string;
+};
 
 export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors, isSubmitting },
-  } = useForm<Pick<UserCreateType, "email">>({
-    resolver: zodResolver(UserCreateSchema.pick({ email: true })),
+  } = useForm<RegisterUser>({
+    resolver: zodResolver(
+      UserCreateSchema.extend({ password: z.string() }).pick({
+        email: true,
+        name: true,
+        password: true,
+      }),
+    ),
   });
 
-  const onSubmit: SubmitHandler<Pick<UserCreateType, "email">> = async (
-    data,
-  ) => {
-    const result = await authClient.signIn.magicLink({
+  const onSubmit: SubmitHandler<RegisterUser> = async (data) => {
+    const result = await authClient.signUp.email({
       email: data.email,
-      callbackURL: "/home",
-      newUserCallbackURL: "/onboarding",
-      errorCallbackURL: "/auth/error",
+      name: data.name,
+      password: data.password,
     });
-    if (result.error || !result.data?.status)
+    console.log("result", result);
+    if (result.error) {
       toast.error(
         result.error?.message || "Failed to signup. Please try again",
       );
+    } else if (!!result.data?.user) {
+      toast.success(
+        "Registration successful! Please check your email to verify your account.",
+      );
+      router.push("/login");
+    }
   };
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -64,6 +81,19 @@ export function SignupForm({
             </FieldDescription>
           </div>
           <Field>
+            <FieldLabel htmlFor="email">Name</FieldLabel>
+            <Input
+              id="name"
+              type="text"
+              placeholder="John Doe"
+              required
+              {...register("name")}
+            />
+            {errors.name && (
+              <div className="text-red-500">{errors.name.message}</div>
+            )}
+          </Field>
+          <Field>
             <FieldLabel htmlFor="email">Email</FieldLabel>
             <Input
               id="email"
@@ -74,6 +104,19 @@ export function SignupForm({
             />
             {errors.email && (
               <div className="text-red-500">{errors.email.message}</div>
+            )}
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="password">Password</FieldLabel>
+            <Input
+              id="password"
+              type="password"
+              placeholder="********"
+              required
+              {...register("password")}
+            />
+            {errors.password && (
+              <div className="text-red-500">{errors.password.message}</div>
             )}
           </Field>
           <Field>
